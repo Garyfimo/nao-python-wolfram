@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask import Flask, make_response
 from json import dumps
 import pytest
@@ -11,13 +12,18 @@ app = Flask(__name__)
 def index():
 	return "Wolfram test"
 
-@app.route("/ask/<question>")
-def test_basic(question):
+@app.route("/<question>")
+def get_answer(question):
+	hola = search_wolframalpha(question)
+	return make_response(dumps(hola, ensure_ascii=False).encode("utf-8"))
+	
+
+def search_wolframalpha(question):
 	cliente = wolframalpha.Client(app_id)
 	res = cliente.query(question)
 	if len(res.pods) > 0:
 		results = list(res.results)
-		return make_response(dumps(results[0].text, ensure_ascii=False).encode("utf-8"))
+		return results[0].text
 	else:
 		return "No tengo respuesta para eso"
 
