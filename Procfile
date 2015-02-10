@@ -1,1 +1,1 @@
-web: gunicorn service:app
+web: gunicorn wolfram_test:app
